@@ -9,9 +9,9 @@
 #define t_floatarg float
 #define atom_getsymarg atom_getsymbolarg
 
-static t_class *granola_class;
+static t_class *fathead_class;
 
-#define OBJECT_NAME "granola~"
+#define OBJECT_NAME "fathead~"
 #define FATHEAD_MSG "by Adam Tindale"
 #ifndef PIOVERTWO
 #define PIOVERTWO 1.5707963268
@@ -23,7 +23,7 @@ static t_class *granola_class;
 #define PI 3.14159265358979
 #endif
 
-typedef struct _granola
+typedef struct _fathead
 {
   t_object x_obj;
   float x_f;
@@ -41,46 +41,47 @@ typedef struct _granola
   long curdel;
   short mute_me;
   short iconnect;
+  // float *fhbuffer;
 
-} t_granola;
+} t_fathead;
 
 
 
-void *granola_new(t_floatarg val);
+void *fathead_new(t_floatarg val);
 t_int *offset_perform(t_int *w);
-t_int *granola_perform(t_int *w);
-void granola_dsp(t_granola *x, t_signal **sp, short *count);
-void granola_assist(t_granola *x, void *b, long m, long a, char *s);
-void granola_mute(t_granola *x, t_floatarg toggle);
-void granola_float(t_granola *x, double f ) ;
-void granola_dsp_free(t_granola *x);
+t_int *fathead_perform(t_int *w);
+void fathead_dsp(t_fathead *x, t_signal **sp, short *count);
+void fathead_assist(t_fathead *x, void *b, long m, long a, char *s);
+void fathead_mute(t_fathead *x, t_floatarg toggle);
+void fathead_float(t_fathead *x, double f ) ;
+void fathead_dsp_free(t_fathead *x);
 
-void granola_tilde_setup(void){
-  granola_class = class_new(gensym("granola~"), (t_newmethod)granola_new, 
-			    (t_method)granola_dsp_free ,sizeof(t_granola), 0,A_FLOAT,0);
-  CLASS_MAINSIGNALIN(granola_class, t_granola, x_f);
-  class_addmethod(granola_class,(t_method)granola_dsp,gensym("dsp"),0);
-  class_addmethod(granola_class,(t_method)granola_mute,gensym("mute"),A_FLOAT,0);
+void fathead_tilde_setup(void){
+  fathead_class = class_new(gensym("fathead~"), (t_newmethod)fathead_new, 
+			    (t_method)fathead_dsp_free ,sizeof(t_fathead), 0,A_FLOAT,0);
+  CLASS_MAINSIGNALIN(fathead_class, t_fathead, x_f);
+  class_addmethod(fathead_class,(t_method)fathead_dsp,gensym("dsp"),0);
+  class_addmethod(fathead_class,(t_method)fathead_mute,gensym("mute"),A_FLOAT,0);
   post("%s %s",OBJECT_NAME, FATHEAD_MSG);
 }
 
-void granola_float(t_granola *x, double f) {
+void fathead_float(t_fathead *x, double f) {
   x->incr = f; 
 } 
 
-void granola_dsp_free(t_granola *x)
+void fathead_dsp_free(t_fathead *x)
 {
   free(x->gbuf);
   free(x->grainenv);
 }
 
 
-void granola_mute(t_granola *x, t_floatarg toggle)
+void fathead_mute(t_fathead *x, t_floatarg toggle)
 {
   x->mute_me = (short)toggle;
 }
 
-void granola_assist (t_granola *x, void *b, long msg, long arg, char *dst)
+void fathead_assist (t_fathead *x, void *b, long msg, long arg, char *dst)
 {
   if (msg==1) {
     switch (arg) {
@@ -92,10 +93,10 @@ void granola_assist (t_granola *x, void *b, long msg, long arg, char *dst)
   }
 }
 
-void *granola_new(t_floatarg val)
+void *fathead_new(t_floatarg val)
 {
   int i;
-  t_granola *x = (t_granola *)pd_new(granola_class);
+  t_fathead *x = (t_fathead *)pd_new(fathead_class);
   inlet_new(&x->x_obj, &x->x_obj.ob_pd,gensym("signal"), gensym("signal"));
   outlet_new(&x->x_obj, gensym("signal"));
 
@@ -127,7 +128,7 @@ void *granola_new(t_floatarg val)
   return (x);
 }
 
-t_int *granola_perform(t_int *w)
+t_int *fathead_perform(t_int *w)
 {
 	float  outsamp ;
 	int iphs_a, iphs_b;
@@ -135,7 +136,7 @@ t_int *granola_perform(t_int *w)
 
 	
 	/****/
-	t_granola *x = (t_granola *) (w[1]);
+	t_fathead *x = (t_fathead *) (w[1]);
 	t_float *in = (t_float *)(w[2]);
 	t_float *increment = (t_float *)(w[3]);
 	t_float *out = (t_float *)(w[4]);
@@ -263,8 +264,8 @@ t_int *granola_perform(t_int *w)
 	
 }		
 
-void granola_dsp(t_granola *x, t_signal **sp, short *count)
+void fathead_dsp(t_fathead *x, t_signal **sp, short *count)
 {
-  dsp_add(granola_perform, 5, x, sp[0]->s_vec, sp[1]->s_vec, sp[2]->s_vec,  sp[0]->s_n);
+  dsp_add(fathead_perform, 5, x, sp[0]->s_vec, sp[1]->s_vec, sp[2]->s_vec,  sp[0]->s_n);
 }
 
