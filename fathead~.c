@@ -22,6 +22,8 @@ typedef struct _fathead
   float *fhbufferL;
   float *fhbufferR;
 
+  float dummy; // used to appease pd's insistence of sending floats to left inlet
+
 } t_fathead;
 
 void *fathead_new(); /// removed floatarg. is this right? 
@@ -31,11 +33,9 @@ void fathead_dsp_free(t_fathead *x);
 
 
 void fathead_tilde_setup(void){
-
-  // CHANGE TO GET NO ARGUMENTS
   fathead_class = class_new(gensym("fathead~"), (t_newmethod)fathead_new, 
-			    (t_method)fathead_dsp_free ,sizeof(t_fathead), 0,A_FLOAT,0);
-  CLASS_MAINSIGNALIN(fathead_class, t_fathead, x_f); // FIX THIS
+			    (t_method)fathead_dsp_free ,sizeof(t_fathead), 0,0,0);
+  CLASS_MAINSIGNALIN(fathead_class, t_fathead , dummy); 
   class_addmethod(fathead_class,(t_method)fathead_dsp,gensym("dsp"),0);
 }
 
@@ -45,7 +45,7 @@ void fathead_dsp_free(t_fathead *x)
   free(x->fhbufferR);
 }
 
-void *fathead_new()
+void *fathead_new(void)
 {
   t_fathead *x = (t_fathead *)pd_new(fathead_class);
 
@@ -55,7 +55,7 @@ void *fathead_new()
   outlet_new(&x->x_obj, gensym("signal"));
   outlet_new(&x->x_obj, gensym("signal"));
 
-  x->buflen = x->s_sr;
+  x->buflen = sys_getsr();
 
   x->fhbufferL = (float *) calloc( x->buflen, sizeof(float) );
   x->fhbufferR = (float *) calloc( x->buflen, sizeof(float) );
