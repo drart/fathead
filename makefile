@@ -17,8 +17,8 @@ DARWINCFLAGS = -DPD -O2 -Wall -W -Wshadow -Wstrict-prototypes \
     -Wno-unused -Wno-parentheses -Wno-switch
 
 .c.pd_darwin:
-	cc $(DARWINCFLAGS) $(LINUXINCLUDE)  -o $*.o -c $*.c 
-	cc -bundle -undefined suppress  -flat_namespace -o $*.pd_darwin $*.o 
+	cc -arch i386 $(DARWINCFLAGS) -o $*.o -c $*.c 
+	cc -arch i386 -bundle -undefined suppress  -flat_namespace -o $*.pd_darwin $*.o 
 	rm -f $*.o ../$*.pd_darwin
 	cp $*.pd_darwin $(DEST)
 # ----------------------------------------------------------
