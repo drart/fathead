@@ -1,33 +1,22 @@
 #N canvas 484 193 466 316 10;
-#X obj 132 192 dac~;
-#X obj 132 38 phasor~ 450;
-#X floatatom 218 77 5 0 0 2 g-transpose g-transpose -;
-#X msg 37 212 1;
-#X obj 37 189 loadbang;
-#X obj 289 185 tgl 15 0 empty empty empty 0 -6 0 8 -262144 -1 -1 0
-1;
-#X msg 289 217 \; pd dsp \$1;
-#X obj 132 166 *~ 0.05;
-#X obj 40 243 hsl 128 15 0.1 3 0 0 g-transpose empty transpose_factor
--2 -6 0 8 -4075 -1 -1 3941 1;
-#X text 234 99 cheap granular transposition;
-#X text 238 116 of live input;
-#X obj 61 46 tgl 15 0 empty empty empty 0 -6 0 8 -262144 -1 -1 0 1
+#X obj 20 130 dac~;
+#X obj 20 219 tgl 15 0 empty empty empty 0 -6 0 8 -262144 -1 -1 0 1
 ;
-#X msg 61 78 mute \$1;
-#X obj 179 133 hsl 90 8 0 0.1 0 0 empty empty empty -2 -8 0 10 -212981
+#X msg 20 251 \; pd dsp \$1;
+#X obj 20 104 *~ 0.05;
+#X obj 20 33 adc~;
+#X obj 20 70 fathead~;
+#X obj 70 104 *~ 0.05;
+#X obj 112 47 hsl 90 8 0 0.1 0 0 empty empty empty -2 -8 0 10 -212981
 -1 -1 0 1;
-#X floatatom 176 147 5 0 0 0 - - -;
-#X obj 132 109 fathead~ 8192;
-#X connect 1 0 15 0;
-#X connect 2 0 15 1;
-#X connect 3 0 8 0;
-#X connect 4 0 3 0;
-#X connect 5 0 6 0;
-#X connect 7 0 0 0;
-#X connect 7 0 0 1;
-#X connect 11 0 12 0;
-#X connect 12 0 15 0;
-#X connect 13 0 14 0;
-#X connect 14 0 7 1;
-#X connect 15 0 7 0;
+#X floatatom 109 61 5 0 0 0 - - -;
+#X connect 1 0 2 0;
+#X connect 3 0 0 0;
+#X connect 4 0 5 0;
+#X connect 4 1 5 1;
+#X connect 5 0 3 0;
+#X connect 5 1 6 0;
+#X connect 6 0 0 1;
+#X connect 7 0 8 0;
+#X connect 8 0 6 1;
+#X connect 8 0 3 1;
